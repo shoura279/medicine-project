@@ -7,7 +7,7 @@ const auth = require("../../middleware/authorize");
 const updateUser = require("../../schema/updateUser");
 
 // get sepecific user
-router.get("/:id", admin, async (req, res) => {
+router.get("/getSepecificUser/:id", admin, async (req, res) => {
   try {
     const data = await query(`SELECT * from users where id = ${req.params.id}`);
     if (data.length == 0) {
@@ -25,7 +25,7 @@ router.get("/:id", admin, async (req, res) => {
 });
 
 // update user
-router.put("/:id",admin, updateUser, async (req, res) => {
+router.put("/updateUser/:id",admin, updateUser, async (req, res) => {
   try {
     // validation of email , password , phone
     const errors = validationResult(req);
@@ -62,7 +62,7 @@ router.put("/:id",admin, updateUser, async (req, res) => {
 });
 
 // delete user
-router.delete("/:id",admin, async (req, res) => {
+router.delete("/deleteUser/:id",admin, async (req, res) => {
   try {
     const data = await query(
       `select id from users WHERE id = ${req.params.id}`

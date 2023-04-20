@@ -6,7 +6,7 @@ const query = require("../../db/connection");
 const User = require("../../classes/User");
 const registerSchema = require("../../schema/register");
 
-router.post("", registerSchema, async (req, res) => {
+router.post("/registr", registerSchema, async (req, res) => {
   try {
     // ========= 1-Vaildation
     const errors = validationResult(req);

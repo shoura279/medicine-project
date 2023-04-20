@@ -8,7 +8,7 @@ const { serialize } = require("v8");
 const query = require("../../db/connection");
 
 //=================send request
-router.post("", authorize, async (req, res) => {
+router.post("/sendRequests", authorize, async (req, res) => {
   try {
     const requestObj = new Request();
     requestObj.status = 0;

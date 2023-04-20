@@ -3,7 +3,7 @@ const { query } = require("../../db/connection");
 const admin = require("../../middleware/admin");
 
 //get requist for meds
-router.get("/", admin, async (req, res) => {
+router.get("/getRequist", admin, async (req, res) => {
   try {
     let search = "";
     if (req.query.search) {
@@ -13,7 +13,9 @@ router.get("/", admin, async (req, res) => {
     const data = await query(`select * from requests ${search}`);
     res.status(200).json(data);
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({
+      errors: [{ msg: "something error" }],
+    });
   }
 });
 

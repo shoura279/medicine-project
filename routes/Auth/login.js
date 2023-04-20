@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 //Login
 router.post(
-  "",
+  "/login",
   body("email").isEmail().withMessage("Enter a vaild email!"), // Email's constrains
 
   async (req, res) => {

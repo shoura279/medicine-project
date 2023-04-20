@@ -11,8 +11,7 @@ const createMedsSchema = require("../../schema/createMeds");
 const updateSchema = require("../../schema/updateMeds");
 
 //===============Create Medicine
-router.post(
-  "/create",
+router.post( "/createMedicine",
   Admin,
 
   // add image to folder upload immediately, before any check
@@ -82,8 +81,7 @@ router.post(
 );
 
 //=====================Update Medicine
-router.put(
-  "/:id",
+router.put("/updateMedicine/:id",
   Admin,
   uplaod.single("imageURL"),
 
@@ -151,7 +149,7 @@ router.put(
 );
 
 //========================================Delete Medicine
-router.delete("/:id", Admin, async (req, res) => {
+router.delete("deleteMedicine/:id", Admin, async (req, res) => {
   try {
     // ========= 1-Check is this medicine is exits
     const medicinesResult = await query(
@@ -180,6 +178,5 @@ router.delete("/:id", Admin, async (req, res) => {
   }
 });
 
-//////////////////// accept request from user on medicine ////////////////////////
 
 module.exports = router;

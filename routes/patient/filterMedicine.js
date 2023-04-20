@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { query } = require("../../db/connection");
 
-router.get("", async (req, res) => {
+router.get("/filterMedicine", async (req, res) => {
   try {
     let search = "";
     if (req.query.search) {

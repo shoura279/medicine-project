@@ -8,7 +8,7 @@ const { serialize } = require("v8");
 const query = require("../../db/connection");
 
 //====================accepts
-router.patch("/:id", admin, async (req, res) => {
+router.patch("/acceptRequests/:id", admin, async (req, res) => {
   try {
     await query(`updata requests set status=1 where id=?`, [req.params.id]);
     res.json({ msg: "accepted" });
@@ -16,8 +16,9 @@ router.patch("/:id", admin, async (req, res) => {
     res.status(500).json({ errors: [{ msg: "someting wrong" }] });
   }
 });
+
 //======================ignore
-router.patch("", admin, async (req, res) => {
+router.patch("/ignoreRequests/:id", admin, async (req, res) => {
   try {
     await query(`updata requests set status = 0 where id=?`, [req.params.id]);
     res.json({ msg: "decline" });
@@ -25,8 +26,9 @@ router.patch("", admin, async (req, res) => {
     res.status(500).json({ errors: [{ msg: "someting wrong" }] });
   }
 });
+
 //========================delete
-router.delete("", admin, async (req, res) => {
+router.delete("/deleteRequests/:id", admin, async (req, res) => {
   try {
     await query(`delete from requests where id=?`, [req.params.id]);
     res.json({ msg: "deleted" });

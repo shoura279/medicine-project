@@ -7,7 +7,7 @@ const updateSchema = require("../../schema/updateMeds");
 const { body } = require("express-validator");
 
 //===============get all category or specific
-router.get("/", async (req, res) => {
+router.get("/getCategore", async (req, res) => {
   try {
     let search = "";
     if (req.query.search) {
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 //============create new categry
-router.post("/", admin, async (req, res) => {
+router.post("/createCategore", admin, async (req, res) => {
   try {
     //check category if exist already
     const checkCategory = await query("select * from categories where name=?", [
@@ -49,7 +49,7 @@ router.post("/", admin, async (req, res) => {
 });
 
 //==============UPDATA CATEGORY
-router.patch("/:id", updateSchema, admin, async (req, res) => {
+router.patch("/updataCategory/:id", updateSchema, admin, async (req, res) => {
   try {
     // check if category is exist
     const data = await query(
@@ -83,7 +83,7 @@ router.patch("/:id", updateSchema, admin, async (req, res) => {
 });
 
 //============DELET CATEGORY
-router.delete("/:id", admin, async (req, res) => {
+router.delete("/deleteCategory/:id", admin, async (req, res) => {
   try {
     // ========= 1-Check is this category is exits
     const data = await query(
