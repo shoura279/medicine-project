@@ -10,9 +10,9 @@ const cors = require("cors");
 app.use(cors());
 
 // // ============ Required Modules ============
-const adminRoute =require("./routes/adminRoute")
-const userRoute =require("./routes/userRoute")
-
+const adminRoute = require("./routes/adminRoute");
+const userRoute = require("./routes/userRoute");
+const shared = require("./routes/shared");
 // ============ Run Server ============
 app.listen(5000, "localhost", () => {
   console.log("SERVER IS RUNNING");
@@ -20,6 +20,7 @@ app.listen(5000, "localhost", () => {
 
 // // ============ API Routes [EndPoints] ============
 
-app.use("/admin",adminRoute);
-app.use("/user",userRoute);
+app.use("/meds/admin", adminRoute);
+app.use("/meds/user", userRoute);
+app.use("/meds", shared);
 
