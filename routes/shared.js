@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const User = require("../classes/User");
 const registerSchema = require("../schema/register");
-const { query } = require("../db/connection");
+const query = require("../db/connection");
 //======================== Login ========================
 router.post(
   "/login",
@@ -134,7 +134,7 @@ router.get("/filterMedicine", async (req, res) => {
 });
 // ======================== view specific medicine ========================
 //======================== Show [ Admin and User] ========================
-router.get("/:id", async (req, res) => {
+router.get("/Medicine/:id", async (req, res) => {
   try {
     const medicinesResult = await query(
       "select * from medicines where id = ?",

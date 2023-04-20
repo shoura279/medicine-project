@@ -14,65 +14,6 @@ const User = require("../classes/User");
 const auth = require("../middleware/authorize");
 const updateUser = require("../schema/updateUser");
 
-// //======================== Login ========================
-// router.post(
-//   "/login",
-//   body("email").isEmail().withMessage("Enter a vaild email!"), // Email's constrains
-
-//   async (req, res) => {
-//     try {
-//       // ========= 1-Vaildation
-//       const errors = validationResult(req);
-//       if (!errors.isEmpty()) {
-//         return res.status(400).json({ errors: errors.array() });
-//       }
-
-//       // ========= 2-Check email if is already exits
-//       const userRecordResult = await query(
-//         `select * from users where email='${req.body.email}'`
-//       );
-//       if (userRecordResult.length == 0) {
-//         return res.status(404).json({
-//           errors: [{ msg: "Email not exits " }],
-//         });
-//       }
-
-//       // ========= 3-Check password with compare
-//       const checkPassword = await bcrypt.compare(
-//         req.body.password,
-//         userRecordResult[0].password
-//       );
-//       if (!checkPassword) {
-//         return res.status(404).json({
-//           errors: [{ msg: "worng password" }],
-//         });
-//       } else {
-//         delete userRecordResult[0].password;
-//         return res.status(200).json(userRecordResult[0]);
-//       }
-//     } catch (err) {
-//       res.status(500).json({ err: err });
-//     }
-//   }
-// );
-
-// //======================== get all category or specific ========================
-// router.get("/getCategore", async (req, res) => {
-//   try {
-//     let search = "";
-//     if (req.query.search) {
-//       // Query Params
-//       search = `where name like '%${req.query.search}%'`;
-//     }
-//     const data = await query(`select * from categories ${search}`);
-//     res.status(200).json(data);
-//   } catch (err) {
-//     res.status(500).json({
-//       errors: [{ msg: "something error" }],
-//     });
-//   }
-// });
-
 //======================== create new categry ========================
 router.post("/createCategore", admin, async (req, res) => {
   try {
@@ -87,7 +28,9 @@ router.post("/createCategore", admin, async (req, res) => {
     }
 
     // prepare category object
-    const categoryObj = new Category(req.body.name, req.body.description);
+    const categoryObj = new Category(); //(req.body.name, req.body.description);
+    categoryObj.name = req.body.name;
+    categoryObj.description = req.body.description;
 
     await query("insert into categories set ?", categoryObj);
     res.send("succesfully");
@@ -305,7 +248,6 @@ router.put(
         msg: "updated medicines",
       });
     } catch (err) {
-      console.log(err);
       res.status(500).json({
         errors: [{ msg: "something error" }],
       });
@@ -314,7 +256,7 @@ router.put(
 );
 
 //======================== Delete Medicine ========================
-router.delete("deleteMedicine/:id", admin, async (req, res) => {
+router.delete("/deleteMedicine/:id", admin, async (req, res) => {
   try {
     // ========= 1-Check is this medicine is exits
     const medicinesResult = await query(
@@ -342,33 +284,6 @@ router.delete("deleteMedicine/:id", admin, async (req, res) => {
     });
   }
 });
-
-// //======================== filter Medicine ========================
-// router.get("/filterMedicine", async (req, res) => {
-//   try {
-//     let search = "";
-//     if (req.query.search) {
-//       // Query Params
-//       search = `where name like '%${req.query.search}%'`;
-//     }
-//     const result = await query(`select * from medicines ${search}`);
-//     if (result.length == 0) {
-//       res.status(404).json({
-//         msg: "medicine not found",
-//       });
-//       return;
-//     }
-//     result.map((meds) => {
-//       meds.img_url = "http://" + req.hostname + ":5000/" + meds.img_url;
-//     });
-
-//     res.status(200).json(result);
-//   } catch (err) {
-//     res.status(500).json({
-//       errors: [{ msg: "something error" }],
-//     });
-//   }
-// });
 
 //======================== get sepecific user ========================
 router.get("/getSepecificUser/:id", admin, async (req, res) => {
@@ -450,7 +365,7 @@ router.delete("/deleteUser/:id", admin, async (req, res) => {
 //======================== accepts ========================
 router.patch("/acceptRequests/:id", admin, async (req, res) => {
   try {
-    await query(`updata requests set status=1 where id=?`, [req.params.id]);
+    await query(`UPDATE requests SET status = '1' where id = ?`, req.params.id);
     res.json({ msg: "accepted" });
   } catch (err) {
     res.status(500).json({ errors: [{ msg: "someting wrong" }] });
@@ -460,9 +375,10 @@ router.patch("/acceptRequests/:id", admin, async (req, res) => {
 // ======================== ignore ========================
 router.patch("/ignoreRequests/:id", admin, async (req, res) => {
   try {
-    await query(`updata requests set status = 0 where id=?`, [req.params.id]);
+    await query(`UPDATE requests SET status = '0' where id = ?`, req.params.id);
     res.json({ msg: "decline" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ errors: [{ msg: "someting wrong" }] });
   }
 });
