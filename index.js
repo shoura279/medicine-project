@@ -10,11 +10,8 @@ const cors = require("cors");
 app.use(cors());
 
 // // ============ Required Modules ============
-const registration = require("./routes/Auth/registration");
-const login = require("./routes/Auth/login");
-const manageMeds = require("./routes/Medicines/AdminUser");
-const patientUserMeds = require("./routes/Medicines/patientUser");
-
+const adminRoute =require("./routes/adminRoute")
+const userRoute =require("./routes/userRoute")
 
 // ============ Run Server ============
 app.listen(5000, "localhost", () => {
@@ -22,9 +19,7 @@ app.listen(5000, "localhost", () => {
 });
 
 // // ============ API Routes [EndPoints] ============
-app.use("/register", registration);
-app.use("/admin/createUser", registration);
 
-app.use("/login", login);
-app.use("/catgory/medicine", manageMeds)
-app.use("/catgory/medicine", patientUserMeds)
+app.use("/admin",adminRoute);
+app.use("/user",userRoute);
+
