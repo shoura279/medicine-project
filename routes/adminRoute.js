@@ -314,43 +314,25 @@ router.put("/updateUser/:id", admin, updateUser, async (req, res) => {
     const oldData = await query(
       `select * from users WHERE id = ${req.params.id}`
     );
-    const userObj = {
-      name: req.body.name ? req.body.name : oldData[0].name,
-      email: req.body.email ? req.body.email : oldData[0].email,
-      password: req.body.password ? req.body.password : oldData[0].password,
-      phone: req.body.phone ? req.body.phone : oldData[0].phone,
-      status: req.body.status ? req.body.status : oldData[0].status,
-      type: req.body.type ? req.body.type : oldData[0].type,
-      token: req.body.token ? req.body.token : oldData[0].token,
-    };
-
-    // const userObj = new User();
-    // if (req.body.email) {
-    //   userObj.email = req.body.email;
-    // }else{
-    //   userObj.email = oldData[0].email;
-    // }
-    // if (req.body.password) {
-    //   userObj.password = req.body.password;
-    // }else{
-    //   userObj.password = oldData[0].password;
-    // }
-    // if (req.body.phone) {
-    //   userObj.phone = req.body.phone;
-    // }else{
-    //   userObj.phone =oldData[0].phone;
-    // }
-    // if (req.body.status) {
-    //   userObj.status = req.body.status;
-    // }else{
-    //   userObj.status = oldData[0].status;
-    // }
-    // if (req.body.type) {
-    //   userObj.type = req.body.type;
-    // }else{
-    //   userObj.type = oldData[0].type;
-    // }
-
+    const userObj = new User();
+    req.body.email
+      ? (userObj.email = req.body.email)
+      : (userObj.email = oldData[0].email);
+    req.body.name
+      ? (userObj.name = req.body.name)
+      : (userObj.name = oldData[0].name);
+    req.body.password
+      ? (userObj.password = req.body.password)
+      : (userObj.password = oldData[0].password);
+    req.body.phone
+      ? (userObj.phone = req.body.phone)
+      : (userObj.phone = oldData[0].phone);
+    req.body.status
+      ? (userObj.status = req.body.status)
+      : (userObj.status = oldData[0].status);
+    req.body.type
+      ? (userObj.type = req.body.type)
+      : (userObj.type = oldData[0].type);
     await query(`UPDATE users SET ? WHERE id = ${req.params.id} `, userObj);
     res.status(200).json({
       msg: "updated successfully",
