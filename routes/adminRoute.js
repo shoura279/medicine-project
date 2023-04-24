@@ -324,7 +324,7 @@ router.put("/updateUser/:id", admin, updateUser, async (req, res) => {
       ? (userObj.name = req.body.name)
       : (userObj.name = oldData[0].name);
     req.body.password
-      ? (userObj.password = req.body.password)
+      ? (userObj.password =  await bcrypt.hash(req.body.password, 10))//todo const pass = await bcrypt.hash(req.body.password, 10);
       : (userObj.password = oldData[0].password);
     req.body.phone
       ? (userObj.phone = req.body.phone)
