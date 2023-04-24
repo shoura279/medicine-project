@@ -53,6 +53,7 @@ router.patch("/updataCategory/:id", updateSchema, admin, async (req, res) => {
     }
 
     const categoryObj = new Category();
+    Object.assign(categoryObj, data[0]);
     if (req.body.name) {
       categoryObj.name = req.body.name;
     }
@@ -315,6 +316,7 @@ router.put("/updateUser/:id", admin, updateUser, async (req, res) => {
       `select * from users WHERE id = ${req.params.id}`
     );
     const userObj = new User();
+    Object.assign(userObj, oldData[0]);
     req.body.email
       ? (userObj.email = req.body.email)
       : (userObj.email = oldData[0].email);
