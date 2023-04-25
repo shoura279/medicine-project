@@ -132,6 +132,26 @@ router.get("/filterMedicine", async (req, res) => {
     });
   }
 });
+//======================== list all meds ========================
+router.get("/Medicine", async (req, res) => {
+  try {
+    const medicinesResult = await query("select * from medicines");
+
+    if (!medicinesResult[0]) {
+      res.status(404).json({ errors: [{ msg: "not found medicine " }] });
+    } else {
+      medicinesResult[0].image_url =
+        "http://" + req.hostname + ":5000/" + medicinesResult[0].image_url;
+
+      res.status(200).json(medicinesResult[0]);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      errors: [{ msg: "something error" }],
+    });
+  }
+});
 // ======================== view specific medicine ========================
 //======================== Show [ Admin and User] ========================
 router.get("/Medicine/:id", async (req, res) => {
@@ -156,4 +176,5 @@ router.get("/Medicine/:id", async (req, res) => {
     });
   }
 });
+
 module.exports = router;
