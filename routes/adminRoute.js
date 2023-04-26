@@ -251,6 +251,7 @@ router.put(
         msg: "updated medicines",
       });
     } catch (err) {
+      console.log(err);
       res.status(500).json({
         errors: [{ msg: "something error" }],
       });

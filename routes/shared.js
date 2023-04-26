@@ -141,7 +141,7 @@ router.get("/Medicine", async (req, res) => {
       res.status(404).json({ errors: [{ msg: "not found medicine " }] });
     }
     result.map((meds) => {
-      meds.img_url = "http://" + req.hostname + ":5000/" + meds.img_url;
+      meds.image_url = "http://" + req.hostname + ":5000/" + meds.image_url;
     });
     res.status(200).json(result);
   } catch (err) {
