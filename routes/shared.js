@@ -107,7 +107,7 @@ router.get("/getCategore", async (req, res) => {
 });
 
 //======================== filter Medicine ========================
-router.get("/filterMedicine", async (req, res) => {
+router.get("/Medicine", async (req, res) => {
   try {
     let search = "";
     if (req.query.search) {
@@ -135,7 +135,12 @@ router.get("/filterMedicine", async (req, res) => {
 //======================== list all meds ========================
 router.get("/Medicine", async (req, res) => {
   try {
-    const result = await query("select * from medicines");
+    let search = "";
+    if (req.query.search) {
+      // Query Params
+      search = `where id like '%${req.query.search}%'`;
+    }
+    const result = await query(`select * from medicines ${search}`);
 
     if (!result[0]) {
       res.status(404).json({ errors: [{ msg: "not found medicine " }] });
