@@ -123,15 +123,16 @@ router.get("/getRequist", admin, async (req, res) => {
 router.post(
   "/createMedicine",
   admin,
-  createMedsSchema,
   // add image to folder upload immediately, before any check
   uplaod.single("imageURL"),
-
+  createMedsSchema,
+  
   async (req, res) => {
     try {
       // ========= 1-Vaildation of the structure body
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        // console.log(errors);
         return res.status(400).json({ errors: errors.array() });
       }
 
