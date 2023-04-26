@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
 const schema = [
-  body("name").isAlpha().withMessage("Please enter a vaild medicine name"),
+  body("name").isString().withMessage("Please enter a vaild medicine name"),
 
   body("description")
     .isString()

@@ -123,11 +123,9 @@ router.get("/getRequist", admin, async (req, res) => {
 router.post(
   "/createMedicine",
   admin,
-
+  createMedsSchema,
   // add image to folder upload immediately, before any check
   uplaod.single("imageURL"),
-
-  createMedsSchema,
 
   async (req, res) => {
     try {
