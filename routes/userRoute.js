@@ -22,7 +22,7 @@ router.get("/getRequist/:id", auth, async (req, res) => {
       // Query Params
       search = `where id like '%${req.query.search}%'`;
     }
-    const data = await query(`select * from requests ${search}`);
+    const data = await query(`select * from requests where user_id =${req.params.id} ${search}`);
     res.status(200).json(data);
   } catch (err) {
     console.log(err);

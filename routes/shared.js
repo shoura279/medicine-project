@@ -135,16 +135,15 @@ router.get("/filterMedicine", async (req, res) => {
 //======================== list all meds ========================
 router.get("/Medicine", async (req, res) => {
   try {
-    const medicinesResult = await query("select * from medicines");
+    const result = await query("select * from medicines");
 
-    if (!medicinesResult[0]) {
+    if (!result[0]) {
       res.status(404).json({ errors: [{ msg: "not found medicine " }] });
-    } else {
-      medicinesResult[0].image_url =
-        "http://" + req.hostname + ":5000/" + medicinesResult[0].image_url;
-
-      res.status(200).json(medicinesResult[0]);
     }
+    result.map((meds) => {
+      meds.img_url = "http://" + req.hostname + ":5000/" + meds.img_url;
+    });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json({

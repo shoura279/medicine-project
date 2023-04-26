@@ -13,6 +13,8 @@ const updateSchema = require("../schema/updateMeds");
 const User = require("../classes/User");
 const auth = require("../middleware/authorize");
 const updateUser = require("../schema/updateUser");
+const registerSchema = require("../schema/register");
+const crypto = require("crypto");
 
 //======================== create new categry ========================
 router.post("/createCategore", admin, async (req, res) => {
@@ -255,7 +257,6 @@ router.put(
     }
   }
 );
-
 //======================== Delete Medicine ========================
 router.delete("/deleteMedicine/:id", admin, async (req, res) => {
   try {
@@ -285,7 +286,23 @@ router.delete("/deleteMedicine/:id", admin, async (req, res) => {
     });
   }
 });
-
+//======================== get all users ========================
+router.get("/getallusers", admin, async (req, res) => {
+  try {
+    const data = await query(`SELECT * from users`);
+    if (data.length == 0) {
+      res.status(404).json({
+        msg: "patient not found",
+      });
+      return;
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({
+      errors: [{ msg: "something error" }],
+    });
+  }
+});
 //======================== get sepecific user ========================
 router.get("/getSepecificUser/:id", admin, async (req, res) => {
   try {
@@ -303,7 +320,47 @@ router.get("/getSepecificUser/:id", admin, async (req, res) => {
     });
   }
 });
+//======================== create user ========================
+router.post("/createuser", registerSchema, async (req, res) => {
+  try {
+    // ========= 1-Vaildation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
+    // ========= 2-Check email if is already exits
+    const emailsResult = await query("select * from users where email=?", [
+      req.body.email,
+    ]);
+    if (emailsResult.length > 0) {
+      return res.status(400).json({
+        errors: [{ msg: "email already exits " }],
+      });
+    }
+
+    // ========= 3-Prepare object user to save
+    const pass = await bcrypt.hash(req.body.password, 10);
+    const token = crypto.randomBytes(16).toString("hex");
+    const userObj = new User(
+      req.body.name,
+      req.body.email,
+      pass,
+      req.body.phone,
+      token
+    );
+
+    // ========= 4-Insert user object into db
+    await query(`insert into users set ? `, userObj);
+
+    res.status(200).json({
+      msg: "user created successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ err: err });
+    console.log(err);
+  }
+});
 //======================== update user ========================
 router.put("/updateUser/:id", admin, updateUser, async (req, res) => {
   try {
@@ -324,7 +381,7 @@ router.put("/updateUser/:id", admin, updateUser, async (req, res) => {
       ? (userObj.name = req.body.name)
       : (userObj.name = oldData[0].name);
     req.body.password
-      ? (userObj.password =  await bcrypt.hash(req.body.password, 10))//todo const pass = await bcrypt.hash(req.body.password, 10);
+      ? (userObj.password = await bcrypt.hash(req.body.password, 10)) //todo const pass = await bcrypt.hash(req.body.password, 10);
       : (userObj.password = oldData[0].password);
     req.body.phone
       ? (userObj.phone = req.body.phone)
@@ -372,6 +429,12 @@ router.delete("/deleteUser/:id", admin, async (req, res) => {
 //======================== accepts ========================
 router.patch("/acceptRequests/:id", admin, async (req, res) => {
   try {
+    //check if exist
+    const data = await query(`select * from requests where id = ?`, [
+      req.params.id,
+    ]);
+    if (!data[0]) res.status(403).send("not found request");
+    // accept requests
     await query(`UPDATE requests SET status = '1' where id = ?`, req.params.id);
     res.json({ msg: "accepted" });
   } catch (err) {
@@ -382,10 +445,15 @@ router.patch("/acceptRequests/:id", admin, async (req, res) => {
 // ======================== ignore ========================
 router.patch("/ignoreRequests/:id", admin, async (req, res) => {
   try {
+    //check if exist
+    const data = await query(`select * from requests where id = ?`, [
+      req.params.id,
+    ]);
+    if (!data[0]) res.status(403).send("not found request");
     await query(`UPDATE requests SET status = '0' where id = ?`, req.params.id);
     res.json({ msg: "decline" });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ errors: [{ msg: "someting wrong" }] });
   }
 });
@@ -393,6 +461,11 @@ router.patch("/ignoreRequests/:id", admin, async (req, res) => {
 //======================== delete ========================
 router.delete("/deleteRequests/:id", admin, async (req, res) => {
   try {
+    //check if exist
+    const data = await query(`select * from requests where id = ?`, [
+      req.params.id,
+    ]);
+    if (!data[0]) res.status(403).send("not found request");
     await query(`delete from requests where id=?`, [req.params.id]);
     res.json({ msg: "deleted" });
   } catch (err) {
