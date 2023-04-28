@@ -56,7 +56,7 @@ router.put("/logout", async (req, res) => {
     if (req.headers.token != null) {
       console.log(req.headers.token);
       await query(`UPDATE users set status = '0' where token = ?`, [
-        req.header.token,
+        req.headers.token,
       ]);
       res.send("logout successfully");
     } else {
