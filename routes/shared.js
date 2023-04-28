@@ -38,6 +38,10 @@ router.post(
           errors: [{ msg: "worng password" }],
         });
       } else {
+        userRecordResult[0].status = 1;
+        await query(`UPDATE users set status = '1' where id = ?`, [
+          userRecordResult[0].id,
+        ]);
         delete userRecordResult[0].password;
         return res.status(200).json(userRecordResult[0]);
       }
