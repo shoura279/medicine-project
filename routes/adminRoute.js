@@ -132,6 +132,7 @@ router.post(
       // ========= 1-Vaildation of the structure body
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        fs.unlinkSync("./upload/" + req.file.filename);
         // console.log(errors);
         return res.status(400).json({ errors: errors.array() });
       }
@@ -202,6 +203,7 @@ router.put(
       // ========= 1-Vaildation of the name and description
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        fs.unlinkSync("./upload/" + req.file.filename);
         return res.status(400).json({ errors: errors.array() });
       }
 
