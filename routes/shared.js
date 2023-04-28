@@ -50,7 +50,23 @@ router.post(
     }
   }
 );
-
+//======================== Logout ========================
+router.post("/logout", async (req, res) => {
+  try {
+    if (req.headers.token!=null) {
+      console.log(req.headers.token);
+      await query(`UPDATE users set status = '0' where token = ?`, [
+        req.header.token,
+      ]);
+      res.send("logout successfully");
+    } else {
+      console.log(req.header.token);
+      res.status(403).send("your are not log in");
+    }
+  } catch (err) {
+    res.status(500).json({ err: err });
+  }
+});
 //======================== registr ========================
 router.post("/registr", registerSchema, async (req, res) => {
   try {
