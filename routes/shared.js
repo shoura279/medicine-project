@@ -51,9 +51,9 @@ router.post(
   }
 );
 //======================== Logout ========================
-router.post("/logout", async (req, res) => {
+router.put("/logout", async (req, res) => {
   try {
-    if (req.headers.token!=null) {
+    if (req.headers.token != null) {
       console.log(req.headers.token);
       await query(`UPDATE users set status = '0' where token = ?`, [
         req.header.token,
