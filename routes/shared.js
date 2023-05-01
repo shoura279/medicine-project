@@ -109,7 +109,7 @@ router.post("/registr", registerSchema, async (req, res) => {
   }
 });
 
-//======================== get all category or specific ========================
+//======================== get all category ========================
 router.get("/getCategore", async (req, res) => {
   try {
     let search = "";
@@ -125,7 +125,23 @@ router.get("/getCategore", async (req, res) => {
     });
   }
 });
-
+//======================== get specific category ========================
+router.get("/getCategore/:id", async (req, res) => {
+  try {
+    const data = await query(
+      `select * from categories where id = ${req.params.id}`
+    );
+    if (data.length == 0)
+      return res.status(200).json({
+        msg: " category not found! ",
+      });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({
+      errors: [{ msg: "something error" }],
+    });
+  }
+});
 //======================== filter Medicine ========================
 router.get("/Medicine", async (req, res) => {
   try {
