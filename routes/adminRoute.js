@@ -31,12 +31,15 @@ router.post("/createCategore", admin, async (req, res) => {
 
     // prepare category object
     const categoryObj = new Category(); //(req.body.name, req.body.description);
+    if (!req.body.name || !req.body.description)
+      res.status(500).send("feilds didn't be empty");
     categoryObj.name = req.body.name;
     categoryObj.description = req.body.description;
 
     await query("insert into categories set ?", categoryObj);
     res.send("succesfully");
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       errors: [{ msg: "something error" }],
     });
@@ -126,7 +129,7 @@ router.post(
   // add image to folder upload immediately, before any check
   uplaod.single("imageURL"),
   createMedsSchema,
-  
+
   async (req, res) => {
     try {
       // ========= 1-Vaildation of the structure body

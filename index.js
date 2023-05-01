@@ -23,4 +23,3 @@ app.listen(5000, "localhost", () => {
 app.use("/meds/admin", adminRoute);
 app.use("/meds/user", userRoute);
 app.use("/meds", shared);
-
