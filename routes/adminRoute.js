@@ -32,7 +32,9 @@ router.post("/createCategore", admin, async (req, res) => {
     // prepare category object
     const categoryObj = new Category(); //(req.body.name, req.body.description);
     if (!req.body.name || !req.body.description)
-     return res.status(500).send("feilds can't be empty");
+      return res.status(500).json({
+        errors: [{ msg: "feilds cann't be empty" }],
+      });
     categoryObj.name = req.body.name;
     categoryObj.description = req.body.description;
 
@@ -59,9 +61,21 @@ router.patch("/updataCategory/:id", updateSchema, admin, async (req, res) => {
 
     const categoryObj = new Category();
     Object.assign(categoryObj, data[0]);
+    if (!req.body.name && !req.body.description)
+      return res.status(500).json({
+        errors: [{ msg: "cann't be empty" }],
+      });
+    if (req.body.name == "")
+      return res.status(500).json({
+        errors: [{ msg: "cann't be empty" }],
+      });
     if (req.body.name) {
       categoryObj.name = req.body.name;
     }
+    if (req.body.description == "")
+      return res.status(500).json({
+        errors: [{ msg: "cann't be empty" }],
+      });
     if (req.body.description) {
       categoryObj.description = req.body.description;
     }
