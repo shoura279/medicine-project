@@ -3,14 +3,14 @@ const { body } = require("express-validator");
 
 const schema = [
   body("name").custom(() => {
-    if (body("name").isAlpha() || body("name").isEmpty()) {
+    if (body("name").isString() || body("name").isEmpty()) {
       return "valid";
     } else {
       throw new Error("name is not a valid");
     }
   }),
   body("description").custom(() => {
-    if (body("description").isAlpha() || body("description").isEmpty()) {
+    if (body("description").isString() || body("description").isEmpty()) {
       return "valid";
     } else {
       throw new Error("description is not a valid");

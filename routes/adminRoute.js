@@ -49,37 +49,25 @@ router.post("/createCategore", admin, async (req, res) => {
 });
 
 //======================== UPDATA CATEGORY ========================
-router.patch("/updataCategory/:id", updateSchema, admin, async (req, res) => {
+router.patch("/updataCategory/:id", admin, updateSchema, async (req, res) => {
   try {
     // check if category is exist
     const data = await query(
       `select * from categories where id=${req.params.id}`
     );
     if (!data[0]) {
-      res.status(400).json({ errors: [{ msg: "catrgory not found" }] });
+      return res.status(400).json({ errors: [{ msg: "catrgory not found" }] });
     }
 
     const categoryObj = new Category();
     Object.assign(categoryObj, data[0]);
-    if (!req.body.name && !req.body.description)
-      return res.status(500).json({
-        errors: [{ msg: "cann't be empty" }],
-      });
-    if (req.body.name == "")
-      return res.status(500).json({
-        errors: [{ msg: "cann't be empty" }],
-      });
+    // if(req.file){}
     if (req.body.name) {
       categoryObj.name = req.body.name;
     }
-    if (req.body.description == "")
-      return res.status(500).json({
-        errors: [{ msg: "cann't be empty" }],
-      });
     if (req.body.description) {
-      categoryObj.description = req.body.description;
+      categoryObj.description = req.body.description; //description
     }
-
     //updata data
     await query(`UPDATE categories set ? where id = ?`, [
       categoryObj,
@@ -89,6 +77,7 @@ router.patch("/updataCategory/:id", updateSchema, admin, async (req, res) => {
       msg: "updated category",
     });
   } catch (err) {
+    // console.log(err);
     res.status(500).json({
       errors: [{ msg: "something error" }],
     });
