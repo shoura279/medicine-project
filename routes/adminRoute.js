@@ -32,7 +32,7 @@ router.post("/createCategore", admin, async (req, res) => {
     // prepare category object
     const categoryObj = new Category(); //(req.body.name, req.body.description);
     if (!req.body.name || !req.body.description)
-      res.status(500).send("feilds didn't be empty");
+      res.status(500).send("feilds can't be empty");
     categoryObj.name = req.body.name;
     categoryObj.description = req.body.description;
 
