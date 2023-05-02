@@ -17,14 +17,14 @@ const fsthorize = require("fs");
 //======================== get requist for meds ========================
 router.get("/getRequist/:id", auth, async (req, res) => {
   try {
-    let search = "";
-    if (req.query.search) {
-      // Query Params
-      search = `where id like '%${req.query.search}%'`;
-    }
     const data = await query(
-      `select * from requests where user_id =${req.params.id} ${search}`
+      `select * from requests where user_id =${req.params.id}`
     );
+    data.map(async (meds) => {
+      meds.meds_name = await query(
+        `select name from medicines where id=${meds.medicine_id}`
+      );
+    });
     res.status(200).json(data);
   } catch (err) {
     console.log(err);
@@ -45,6 +45,7 @@ router.post("/sendRequests", authorize, async (req, res) => {
       return res.status(503).json({
         msg: "user id and categiry id required",
       });
+
     await query(`insert into requests set ?`, requestObj);
 
     res.status(200).json({
