@@ -117,6 +117,13 @@ router.get("/getRequist", admin, async (req, res) => {
       search = `where id like '%${req.query.search}%'`;
     }
     const data = await query(`select * from requests ${search}`);
+    for (let i = 0; i < data.length; i++) {
+      const arr = await query(
+        `select name from medicines where id=${data[i].medicine_id}`
+      );
+      data[i].meds_name = arr[0].name;
+    }
+    // console.log(2);
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
@@ -458,7 +465,7 @@ router.patch("/ignoreRequests/:id", admin, async (req, res) => {
       req.params.id,
     ]);
     if (!data[0]) res.status(403).send("not found request");
-    await query(`UPDATE requests SET status = '0' where id = ?`, req.params.id);
+    await query(`UPDATE requests SET status = '2' where id = ?`, req.params.id);
     res.json({ msg: "decline" });
   } catch (err) {
     // console.log(err);
