@@ -22,7 +22,9 @@ router.get("/getRequist/:id", auth, async (req, res) => {
       // Query Params
       search = `where id like '%${req.query.search}%'`;
     }
-    const data = await query(`select * from requests where user_id =${req.params.id} ${search}`);
+    const data = await query(
+      `select * from requests where user_id =${req.params.id} ${search}`
+    );
     res.status(200).json(data);
   } catch (err) {
     console.log(err);
@@ -39,7 +41,10 @@ router.post("/sendRequests", authorize, async (req, res) => {
     requestObj.status = 0;
     requestObj.user_id = req.body.user_id;
     requestObj.medicine_id = req.body.medicine_id;
-
+    if (!req.body.user_id || !req.body.medicine_id)
+      return res.status(503).json({
+        msg: "user id and categiry id required",
+      });
     await query(`insert into requests set ?`, requestObj);
 
     res.status(200).json({
