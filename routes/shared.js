@@ -38,10 +38,6 @@ router.post(
           errors: [{ msg: "worng password" }],
         });
       } else {
-        userRecordResult[0].status = 1;
-        await query(`UPDATE users set status = '1' where id = ?`, [
-          userRecordResult[0].id,
-        ]);
         delete userRecordResult[0].password;
         return res.status(200).json(userRecordResult[0]);
       }
@@ -50,23 +46,6 @@ router.post(
     }
   }
 );
-//======================== Logout ========================
-router.put("/logout", async (req, res) => {
-  try {
-    if (req.headers.token != null) {
-      console.log(req.headers.token);
-      await query(`UPDATE users set status = '0' where token = ?`, [
-        req.headers.token,
-      ]);
-      res.send("logout successfully");
-    } else {
-      console.log(req.header.token);
-      res.status(403).send("your are not log in");
-    }
-  } catch (err) {
-    res.status(500).json({ err: err });
-  }
-});
 //======================== registr ========================
 router.post("/registr", registerSchema, async (req, res) => {
   try {
